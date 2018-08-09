@@ -11,6 +11,7 @@ namespace dsutil
     public class DSUtil
     {
         // Use this version of send when deploying
+        //
         public static async Task<string> SendMailProd(string emailTo, string body, string subject, string host)
         {
             string ret = null;
@@ -36,29 +37,45 @@ namespace dsutil
 
         // Use this version of send when working in development
         // Can try using just Send(), see if it works.
-        public static async Task<string> SendMailDev(string toAddress, string subject, string body)
+        //
+        // YOU MUST follow this link to work with a give gmail address:
+        // https://stackoverflow.com/questions/18503333/the-smtp-server-requires-a-secure-connection-or-the-client-was-not-authenticated
+        // Look at second response.  First logon to gmail with the account you want to gmail from and then click the link he
+        // shows to turn allow Less Secure Sign-In.
+        //
+        public static string SendMailDev(string toEmail, string subject, string body)
         {
             string ret = null;
             try
             {
                 // Gmail Address from where you send the mail
-                var fromAddress = "ventures2019@gmail.com";
+                //var fromAddress = "ventures2019@gmail.com";
                 // any address where the email will be sending
                 //Password of your gmail address
                 const string fromPassword = "k3918834";
+                var fromAddress = new MailAddress("ventures2019@gmail.com", "ventures2019");
+                var toAddress = new MailAddress(toEmail, toEmail);
                 // Passing the values and make a email formate to display
                 // smtp settings
-                var smtp = new System.Net.Mail.SmtpClient();
+                var smtp = new System.Net.Mail.SmtpClient
                 {
-                    smtp.Host = "smtp.gmail.com";
-                    smtp.Port = 587;
-                    smtp.EnableSsl = true;
-                    smtp.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
-                    smtp.Credentials = new NetworkCredential(fromAddress, fromPassword);
-                    smtp.Timeout = 20000;
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                    Timeout = 20000
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body
+                })
+                {
+                    smtp.Send(message);
                 }
                 // Passing values to smtp object
-                await smtp.SendMailAsync(fromAddress, toAddress, subject, body);
+                //await smtp.SendMailAsync(fromAddress, toAddress, subject, body);
             }
             catch (Exception exc)
             {
