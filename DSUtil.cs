@@ -11,8 +11,9 @@ namespace dsutil
     public class DSUtil
     {
         // Use this version of send when deploying
-        protected static async Task SendMailProd(string emailTo, string body, string subject, string host)
+        public static async Task<string> SendMailProd(string emailTo, string body, string subject, string host)
         {
+            string ret = null;
             try
             {
                 MailMessage mailMessage = new MailMessage();
@@ -28,24 +29,24 @@ namespace dsutil
             }
             catch (Exception exc)
             {
-                string msg = exc.Message;
+                ret = exc.Message;
             }
+            return ret;
         }
 
         // Use this version of send when working in development
         // Can try using just Send(), see if it works.
-        public static async Task SendMailDev(string toAddress)
+        public static async Task<string> SendMailDev(string toAddress, string subject, string body)
         {
+            string ret = null;
             try
             {
                 // Gmail Address from where you send the mail
-                var fromAddress = "weidnerk@gmail.com";
+                var fromAddress = "ventures2019@gmail.com";
                 // any address where the email will be sending
                 //Password of your gmail address
-                const string fromPassword = "kw2607666";
+                const string fromPassword = "k3918834";
                 // Passing the values and make a email formate to display
-                string subject = "test subject";
-                string body = "test body";
                 // smtp settings
                 var smtp = new System.Net.Mail.SmtpClient();
                 {
@@ -61,16 +62,24 @@ namespace dsutil
             }
             catch (Exception exc)
             {
-                string msg = exc.Message;
+                ret = exc.Message;
             }
+            return ret;
         }
 
-        public static void WriteFile(string filename, string msg)
+        public static void WriteFile(string filename, string msg, bool blankLine = false)
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + filename, true))
             {
-                string dtStr = DateTime.Now.ToString();
-                file.WriteLine(dtStr + " " + msg);
+                if (!blankLine)
+                {
+                    string dtStr = DateTime.Now.ToString();
+                    file.WriteLine(dtStr + " " + msg);
+                }
+                else
+                {
+                    file.WriteLine(msg);
+                }
             }
         }
         // convert array of strings to delimited string
