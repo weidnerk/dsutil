@@ -116,5 +116,20 @@ namespace dsutil
             string[] array = str.Split(limiter);
             return array.ToList();
         }
+
+        public static string ErrMsg(string header, Exception exc)
+        {
+            string msg = header + " " + exc.Message;
+            if (exc.InnerException != null)
+            {
+                msg += " " + exc.InnerException.Message;
+                if (exc.InnerException.InnerException != null)
+                {
+                    msg += " " + exc.InnerException.InnerException.Message;
+                }
+            }
+            return msg;
+        }
+
     }
 }
