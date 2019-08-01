@@ -84,19 +84,26 @@ namespace dsutil
             return ret;
         }
 
-        public static void WriteFile(string filename, string msg, bool blankLine = false)
+        public static void WriteFile(string filename, string msg, string username, bool blankLine = false)
         {
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + filename, true))
+            try
             {
-                if (!blankLine)
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + filename, true))
                 {
-                    string dtStr = DateTime.Now.ToString();
-                    file.WriteLine(dtStr + " " + msg);
+                    if (!blankLine)
+                    {
+                        string dtStr = DateTime.Now.ToString();
+                        file.WriteLine(dtStr + " " + username + " " + msg);
+                    }
+                    else
+                    {
+                        file.WriteLine(msg);
+                    }
                 }
-                else
-                {
-                    file.WriteLine(msg);
-                }
+            }
+            catch
+            {
+
             }
         }
         // convert array of strings to delimited string
