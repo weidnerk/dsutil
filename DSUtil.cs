@@ -12,7 +12,30 @@ namespace dsutil
     {
         // Use this version of send when deploying
         //
-        public static async Task<string> SendMailProd(string emailTo, string body, string subject, string host)
+        public static async Task<string> SendMailProdAsync(string emailTo, string body, string subject, string host)
+        {
+            string ret = null;
+            try
+            {
+                MailMessage mailMessage = new MailMessage();
+                MailAddress fromAddress = new MailAddress("onepluswonder@gmail.com");
+                mailMessage.From = fromAddress;
+                mailMessage.To.Add(emailTo);
+                mailMessage.Body = body;
+                mailMessage.IsBodyHtml = true;
+                mailMessage.Subject = subject;
+                SmtpClient smtpClient = new SmtpClient(host);
+                // smtpClient.Host = host;
+                await smtpClient.SendMailAsync(mailMessage);
+            }
+            catch (Exception exc)
+            {
+                ret = exc.Message;
+            }
+            return ret;
+        }
+
+        public static string SendMailProd(string emailTo, string body, string subject, string host)
         {
             string ret = null;
             try
@@ -25,8 +48,9 @@ namespace dsutil
                 mailMessage.IsBodyHtml = true;
                 mailMessage.Subject = subject;
                 SmtpClient smtpClient = new SmtpClient();
-                smtpClient.Host = host;
-                await smtpClient.SendMailAsync(mailMessage);
+                // smtpClient.Host = host;
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.PickupDirectoryFromIis;
+                smtpClient.Send(mailMessage);
             }
             catch (Exception exc)
             {
@@ -69,7 +93,8 @@ namespace dsutil
                 using (var message = new MailMessage(fromAddress, toAddress)
                 {
                     Subject = subject,
-                    Body = body
+                    Body = body,
+                    IsBodyHtml = true
                 })
                 {
                     smtp.Send(message);
@@ -137,6 +162,5 @@ namespace dsutil
             }
             return msg;
         }
-
     }
 }
