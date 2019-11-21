@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -161,6 +162,20 @@ namespace dsutil
                 }
             }
             return msg;
+        }
+        public static string HTMLToString(string html)
+        {
+            // https://stackoverflow.com/questions/4182594/grab-all-text-from-html-with-html-agility-pack
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(html);
+            string output = null;
+            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()"))
+            {
+                output += node.InnerText;
+            }
+
+            output = doc.DocumentNode.SelectSingleNode("//body").InnerText;
+            return output;
         }
     }
 }
