@@ -190,11 +190,14 @@ namespace dsutil
         public static int FindError(string filename, string marker)
         {
             int match = 0;
-            foreach (string line in File.ReadLines(filename))
+            if (File.Exists(filename))
             {
-                if (line.Contains(marker.ToLower()) || line.Contains(marker.ToUpper()))
+                foreach (string line in File.ReadLines(filename))
                 {
-                    ++match;
+                    if (line.Contains(marker.ToLower()) || line.Contains(marker.ToUpper()))
+                    {
+                        ++match;
+                    }
                 }
             }
             return match;
