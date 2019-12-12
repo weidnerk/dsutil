@@ -192,7 +192,7 @@ namespace dsutil
             int match = 0;
             foreach (string line in File.ReadLines(filename))
             {
-                if (line.Contains(marker))
+                if (line.Contains(marker.ToLower()) && line.Contains(marker.ToUpper()))
                 {
                     ++match;
                 }
