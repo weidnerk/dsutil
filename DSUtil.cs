@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -152,7 +153,7 @@ namespace dsutil
 
         public static string ErrMsg(string header, Exception exc)
         {
-            string msg = header + " " + exc.Message;
+            string msg = header + " ERROR " + exc.Message;
             if (exc.InnerException != null)
             {
                 msg += " " + exc.InnerException.Message;
@@ -169,13 +170,34 @@ namespace dsutil
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(html);
             string output = null;
+          
+            output = doc.DocumentNode.SelectSingleNode("//body").InnerText;
+            return output;
+        }
+        public static string HTMLToString_Full(string html)
+        {
+            // https://stackoverflow.com/questions/4182594/grab-all-text-from-html-with-html-agility-pack
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(html);
+            string output = null;
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()"))
             {
                 output += node.InnerText;
             }
-
-            output = doc.DocumentNode.SelectSingleNode("//body").InnerText;
             return output;
+        }
+
+        public static int FindError(string filename, string marker)
+        {
+            int match = 0;
+            foreach (string line in File.ReadLines(filename))
+            {
+                if (line.Contains(marker))
+                {
+                    ++match;
+                }
+            }
+            return match;
         }
     }
 }
