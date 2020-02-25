@@ -202,5 +202,20 @@ namespace dsutil
             }
             return match;
         }
+        public static string GetLastError(string filename, string marker)
+        {
+            string lastErr = null;
+            if (File.Exists(filename))
+            {
+                foreach (string line in File.ReadLines(filename))
+                {
+                    if (line.Contains(marker.ToLower()) || line.Contains(marker.ToUpper()))
+                    {
+                        lastErr = line;
+                    }
+                }
+            }
+            return lastErr;
+        }
     }
 }
