@@ -246,7 +246,6 @@ namespace dsutil
             }
 
             return date.AddDays(extraDays);
-
         }
         public static int GetBusinessDays(DateTime start, DateTime end)
         {
@@ -280,6 +279,92 @@ namespace dsutil
             {
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Probably should but this in walmart library - they have funny habit of placing question marks in odd places.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool ContainsQuestionMark(string str, out string segment)
+        {
+            segment = null;
+            bool fail = false;
+            bool done = false;
+            int pos = 0;
+            string justText = DSUtil.HTMLToString_Full(str);
+            do
+            {
+                pos = justText.IndexOf("?", pos);
+                if (pos > -1)
+                {
+                    if (pos < justText.Length)
+                    {
+                        char c = justText[pos + 1];
+                        fail = Char.IsLetterOrDigit(c);
+                        if (fail)
+                        {
+                            // get segment that contains the question mark
+                            if (pos > 5)
+                            {
+                                segment = justText.Substring(pos - 5, 5);
+                            }
+                            else
+                            {
+                                segment = justText.Substring(0, pos);
+                            }
+                            if (pos + 5 < justText.Length)
+                            {
+                                var endSegment = justText.Substring(pos, 5);
+                                segment += endSegment;
+                            }
+                            else
+                            {
+                                segment += justText.Substring(pos, 1);
+                            }
+                            done = true;
+                        }
+                        else
+                        {
+                            pos += 2;
+                        }
+                    }
+                    else
+                    {
+                        done = true;
+                    }
+                }
+                else
+                {
+                    done = true;
+                }
+            } while (!done) ;
+            return fail;
+        }
+
+        /// <summary>
+        /// Red flag if supplier item description contains certain key words.
+        /// Hard-coding for now - let's see where this goes.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool ContationsKeyWords(string str)
+        {
+            bool ret = false;
+            int pos = str.ToUpper().IndexOf("COMMENTS");
+            if (pos > -1)
+            {
+                ret = true;
+            }
+            else 
+            { 
+                pos = str.ToUpper().IndexOf("QUESTIONS");
+                if (pos > -1)
+                {
+                    ret = true;
+                }
+            }
+            return ret;
         }
     }
 }
