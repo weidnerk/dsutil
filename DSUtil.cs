@@ -358,8 +358,9 @@ namespace dsutil
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static bool ContationsKeyWords(string str)
+        public static bool ContationsKeyWords(string str, out string help)
         {
+            help = null;
             bool ret = false;
             if (string.IsNullOrEmpty(str))
             {
@@ -368,6 +369,7 @@ namespace dsutil
             int pos = str.ToUpper().IndexOf("COMMENTS");
             if (pos > -1)
             {
+                help = "contains COMMENTS";
                 ret = true;
             }
             else 
@@ -375,6 +377,7 @@ namespace dsutil
                 pos = str.ToUpper().IndexOf("QUESTIONS");
                 if (pos > -1)
                 {
+                    help = "contains QUESTIONS";
                     ret = true;
                 }
                 else
@@ -382,6 +385,7 @@ namespace dsutil
                     pos = str.ToUpper().IndexOf("WALMART");
                     if (pos > -1)
                     {
+                        help = "contains WALMART";
                         ret = true;
                     }
                     else
@@ -389,10 +393,35 @@ namespace dsutil
                         pos = str.ToUpper().IndexOf("WARRANTY");
                         if (pos > -1)
                         {
+                            help = "contains WARRANTY";
                             ret = true;
+                        }
+                        else
+                        {
+                            pos = str.ToUpper().IndexOf("?");
+                            if (pos > -1)
+                            {
+                                help = "contains ?";
+                                ret = true;
+                            }
                         }
                     }
                 }
+            }
+            return ret;
+        }
+        public static bool ContationsDisclaimer(string str)
+        {
+            const string marker = "We aim to show you accurate product information.";
+            bool ret = false;
+            if (string.IsNullOrEmpty(str))
+            {
+                return false;
+            }
+            int pos = str.ToUpper().IndexOf(marker.ToUpper());
+            if (pos > -1)
+            {
+                ret = true;
             }
             return ret;
         }
