@@ -398,11 +398,20 @@ namespace dsutil
                         }
                         else
                         {
-                            pos = str.ToUpper().IndexOf("?");
+                            pos = str.ToUpper().IndexOf("PACK");
                             if (pos > -1)
                             {
-                                help = "contains ?";
+                                help = "contains PACK";
                                 ret = true;
+                            }
+                            else
+                            {
+                                pos = str.ToUpper().IndexOf("?");
+                                if (pos > -1)
+                                {
+                                    help = "contains ?";
+                                    ret = true;
+                                }
                             }
                         }
                     }
