@@ -178,11 +178,14 @@ namespace dsutil
         {
             // https://stackoverflow.com/questions/4182594/grab-all-text-from-html-with-html-agility-pack
             HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html);
             string output = null;
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()"))
+            if (!string.IsNullOrEmpty(html))
             {
-                output += node.InnerText;
+                doc.LoadHtml(html);
+                foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//text()"))
+                {
+                    output += node.InnerText;
+                }
             }
             return output;
         }
@@ -294,6 +297,11 @@ namespace dsutil
             bool fail = false;
             bool done = false;
             int pos = 0;
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return false;
+            }
             string justText = DSUtil.HTMLToString_Full(str);
             do
             {
@@ -353,6 +361,10 @@ namespace dsutil
         public static bool ContationsKeyWords(string str)
         {
             bool ret = false;
+            if (string.IsNullOrEmpty(str))
+            {
+                return false;
+            }
             int pos = str.ToUpper().IndexOf("COMMENTS");
             if (pos > -1)
             {
