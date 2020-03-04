@@ -288,6 +288,8 @@ namespace dsutil
         /// <returns></returns>
         public static bool ContainsQuestionMark(string str, out string segment)
         {
+            const string marker = "&#39;";
+            const int segmentLength = 10;
             segment = null;
             bool fail = false;
             bool done = false;
@@ -295,27 +297,27 @@ namespace dsutil
             string justText = DSUtil.HTMLToString_Full(str);
             do
             {
-                pos = justText.IndexOf("?", pos);
+                pos = justText.IndexOf(marker, pos);
                 if (pos > -1)
                 {
                     if (pos < justText.Length)
                     {
-                        char c = justText[pos + 1];
+                        char c = justText[pos + marker.Length];
                         fail = Char.IsLetterOrDigit(c);
                         if (fail)
                         {
                             // get segment that contains the question mark
-                            if (pos > 5)
+                            if (pos > segmentLength)
                             {
-                                segment = justText.Substring(pos - 5, 5);
+                                segment = justText.Substring(pos - segmentLength, segmentLength);
                             }
                             else
                             {
                                 segment = justText.Substring(0, pos);
                             }
-                            if (pos + 5 < justText.Length)
+                            if (pos + segmentLength < justText.Length)
                             {
-                                var endSegment = justText.Substring(pos, 5);
+                                var endSegment = justText.Substring(pos, segmentLength);
                                 segment += endSegment;
                             }
                             else
@@ -362,6 +364,22 @@ namespace dsutil
                 if (pos > -1)
                 {
                     ret = true;
+                }
+                else
+                {
+                    pos = str.ToUpper().IndexOf("WALMART");
+                    if (pos > -1)
+                    {
+                        ret = true;
+                    }
+                    else
+                    {
+                        pos = str.ToUpper().IndexOf("WARRANTY");
+                        if (pos > -1)
+                        {
+                            ret = true;
+                        }
+                    }
                 }
             }
             return ret;
