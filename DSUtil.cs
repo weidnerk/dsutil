@@ -407,11 +407,20 @@ namespace dsutil
                             }
                             else
                             {
-                                pos = justText.ToUpper().IndexOf("?");
+                                pos = justText.ToUpper().IndexOf("WARNING");
                                 if (pos > -1)
                                 {
-                                    help = "contains ?";
+                                    help = "contains WARNING";
                                     ret = true;
+                                }
+                                else
+                                {
+                                    pos = justText.ToUpper().IndexOf("?");
+                                    if (pos > -1)
+                                    {
+                                        help = "contains ?";
+                                        ret = true;
+                                    }
                                 }
                             }
                         }
