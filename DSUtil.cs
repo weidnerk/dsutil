@@ -366,7 +366,8 @@ namespace dsutil
             {
                 return false;
             }
-            int pos = str.ToUpper().IndexOf("COMMENTS");
+            string justText = DSUtil.HTMLToString_Full(str);
+            int pos = justText.ToUpper().IndexOf("COMMENTS");
             if (pos > -1)
             {
                 help = "contains COMMENTS";
@@ -374,7 +375,7 @@ namespace dsutil
             }
             else 
             { 
-                pos = str.ToUpper().IndexOf("QUESTIONS");
+                pos = justText.ToUpper().IndexOf("QUESTIONS");
                 if (pos > -1)
                 {
                     help = "contains QUESTIONS";
@@ -382,7 +383,7 @@ namespace dsutil
                 }
                 else
                 {
-                    pos = str.ToUpper().IndexOf("WALMART");
+                    pos = justText.ToUpper().IndexOf("WALMART");
                     if (pos > -1)
                     {
                         help = "contains WALMART";
@@ -390,7 +391,7 @@ namespace dsutil
                     }
                     else
                     {
-                        pos = str.ToUpper().IndexOf("WARRANTY");
+                        pos = justText.ToUpper().IndexOf("WARRANTY");
                         if (pos > -1)
                         {
                             help = "contains WARRANTY";
@@ -398,7 +399,7 @@ namespace dsutil
                         }
                         else
                         {
-                            pos = str.ToUpper().IndexOf("PACK");
+                            pos = justText.ToUpper().IndexOf("PACK");
                             if (pos > -1)
                             {
                                 help = "contains PACK";
@@ -406,7 +407,7 @@ namespace dsutil
                             }
                             else
                             {
-                                pos = str.ToUpper().IndexOf("?");
+                                pos = justText.ToUpper().IndexOf("?");
                                 if (pos > -1)
                                 {
                                     help = "contains ?";
