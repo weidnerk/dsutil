@@ -1,4 +1,6 @@
 ﻿using HtmlAgilityPack;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,12 +8,15 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace dsutil
 {
     public class DSUtil
     {
+        readonly static string _logfile = "log.txt";
+
         // Use this version of send when deploying
         //
         public static async Task<string> SendMailProdAsync(string emailTo, string body, string subject, string host)
@@ -170,7 +175,7 @@ namespace dsutil
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(html);
             string output = null;
-          
+
             output = doc.DocumentNode.SelectSingleNode("//body").InnerText;
             return output;
         }
@@ -348,7 +353,7 @@ namespace dsutil
                 {
                     done = true;
                 }
-            } while (!done) ;
+            } while (!done);
             return fail;
         }
 
@@ -358,9 +363,9 @@ namespace dsutil
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static bool ContationsKeyWords(string str, out string help)
+        public static bool ContationsKeyWords(string str, out List<string> help)
         {
-            help = null;
+            help = new List<string>();
             bool ret = false;
             if (string.IsNullOrEmpty(str))
             {
@@ -370,62 +375,44 @@ namespace dsutil
             int pos = justText.ToUpper().IndexOf("COMMENTS");
             if (pos > -1)
             {
-                help = "contains COMMENTS";
+                help.Add("contains COMMENTS");
                 ret = true;
             }
-            else 
-            { 
-                pos = justText.ToUpper().IndexOf("QUESTIONS");
-                if (pos > -1)
-                {
-                    help = "contains QUESTIONS";
-                    ret = true;
-                }
-                else
-                {
-                    pos = justText.ToUpper().IndexOf("WALMART");
-                    if (pos > -1)
-                    {
-                        help = "contains WALMART";
-                        ret = true;
-                    }
-                    else
-                    {
-                        pos = justText.ToUpper().IndexOf("WARRANTY");
-                        if (pos > -1)
-                        {
-                            help = "contains WARRANTY";
-                            ret = true;
-                        }
-                        else
-                        {
-                            pos = justText.ToUpper().IndexOf("PACK");
-                            if (pos > -1)
-                            {
-                                help = "contains PACK";
-                                ret = true;
-                            }
-                            else
-                            {
-                                pos = justText.ToUpper().IndexOf("WARNING");
-                                if (pos > -1)
-                                {
-                                    help = "contains WARNING";
-                                    ret = true;
-                                }
-                                else
-                                {
-                                    pos = justText.ToUpper().IndexOf("?");
-                                    if (pos > -1)
-                                    {
-                                        help = "contains ?";
-                                        ret = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            pos = justText.ToUpper().IndexOf("QUESTIONS");
+            if (pos > -1)
+            {
+                help.Add("contains QUESTIONS");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("WALMART");
+            if (pos > -1)
+            {
+                help.Add("contains WALMART");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("WARRANTY");
+            if (pos > -1)
+            {
+                help.Add("contains WARRANTY");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("PACK");
+            if (pos > -1)
+            {
+                help.Add("contains PACK");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("WARNING");
+            if (pos > -1)
+            {
+                help.Add("contains WARNING");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("?");
+            if (pos > -1)
+            {
+                help.Add("contains ?");
+                ret = true;
             }
             return ret;
         }
@@ -443,6 +430,86 @@ namespace dsutil
                 ret = true;
             }
             return ret;
+        }
+
+        /// <summary>
+        /// Despite using selenium, google eventually starts asking if you are a robot
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        public static string GoogleSearch(string search)
+        {
+            string retURL = null;
+            try
+            {
+                IWebDriver driver = new ChromeDriver();
+                driver.Navigate().GoToUrl("https://www.google.com");
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(60);
+
+                Thread.Sleep(2000);
+                driver.FindElement(By.Name("q")).SendKeys(search);
+                driver.FindElement(By.Name("q")).Submit();
+
+                Thread.Sleep(1000);
+
+                foreach (var item in driver.FindElements(By.TagName("a")))
+                {
+                    var x = item.GetAttribute("href");
+                    if (x != null)
+                    {
+                        if (x.StartsWith("https://www.walmart.com"))
+                        {
+                            retURL = x;
+                            break;
+                        }
+                    }
+                }
+                driver.Quit();
+            }
+            catch (Exception exc)
+            {
+                string header = "GoogleSearch";
+                string msg = dsutil.DSUtil.ErrMsg(header, exc);
+                dsutil.DSUtil.WriteFile(_logfile, msg, "");
+            }
+            return retURL;
+        }
+        public static string BingSearch(string search)
+        {
+            string retURL = null;
+            try
+            {
+                IWebDriver driver = new ChromeDriver();
+                driver.Navigate().GoToUrl("https://www.bing.com/?toWww=1");
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(60);
+
+                Thread.Sleep(2000);
+                driver.FindElement(By.Id("sb_form_q")).SendKeys(search);
+                driver.FindElement(By.Id("sb_form_q")).Submit();
+
+                Thread.Sleep(1000);
+
+                foreach (var item in driver.FindElements(By.TagName("a")))
+                {
+                    var x = item.GetAttribute("href");
+                    if (x != null)
+                    {
+                        if (x.StartsWith("https://www.walmart.com"))
+                        {
+                            retURL = x;
+                            break;
+                        }
+                    }
+                }
+                driver.Quit();
+            }
+            catch (Exception exc)
+            {
+                string header = "AnotherTry";
+                string msg = dsutil.DSUtil.ErrMsg(header, exc);
+                dsutil.DSUtil.WriteFile(_logfile, msg, "");
+            }
+            return retURL;
         }
     }
 }
