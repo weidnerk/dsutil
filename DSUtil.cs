@@ -437,7 +437,7 @@ namespace dsutil
         /// </summary>
         /// <param name="search"></param>
         /// <returns></returns>
-        public static string GoogleSearch(string search)
+        public static string GoogleSearchSelenium(string search)
         {
             string retURL = null;
             try
@@ -474,6 +474,80 @@ namespace dsutil
             }
             return retURL;
         }
+
+        /// <summary>
+        /// Will eventuall return error 429
+        /// </summary>
+        /// <param name="keywords"></param>
+        /// <param name="limit">must find match within first 'limit' results</param>
+        /// <returns></returns>
+        public static string GoogleSearch(string keywords, int limit)
+        {
+            string supplierURL = null;
+            StringBuilder sb = new StringBuilder();
+            byte[] ResultsBuffer = new byte[8192];
+            string SearchResults = "http://google.com/search?q=" + keywords;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(SearchResults);
+
+            // error is here: The remote server returned an error: (429) Too Many Requests.
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            Stream resStream = response.GetResponseStream();
+            string tempString = null;
+            int count = 0;
+            do
+            {
+                count = resStream.Read(ResultsBuffer, 0, ResultsBuffer.Length);
+                if (count != 0)
+                {
+                    tempString = Encoding.ASCII.GetString(ResultsBuffer, 0, count);
+                    sb.Append(tempString);
+                }
+            }
+
+            while (count > 0);
+            string sbb = sb.ToString();
+
+            HtmlAgilityPack.HtmlDocument html = new HtmlAgilityPack.HtmlDocument();
+            html.OptionOutputAsXml = true;
+            html.LoadHtml(sbb);
+            HtmlNode doc = html.DocumentNode;
+
+            int i = 0;
+            var links = new List<string>();
+            foreach (HtmlNode link in doc.SelectNodes("//a[@href]"))
+            {
+                //HtmlAttribute att = link.Attributes["href"];
+                string hrefValue = link.GetAttributeValue("href", string.Empty);
+
+                // make sure we are inside search results
+                if (!hrefValue.ToString().ToUpper().Contains("GOOGLE") && hrefValue.ToString().Contains("/url?q=") && hrefValue.ToString().ToUpper().Contains("HTTPS://"))
+                {
+                    int index = hrefValue.IndexOf("&");
+                    if (index > 0)
+                    {
+                        hrefValue = hrefValue.Substring(0, index);
+                        string possible = hrefValue.Replace("/url?q=", "");
+                        bool pos = possible.StartsWith("https://www.walmart.com");
+                        if (pos)
+                        {
+                            links.Add(hrefValue.Replace("/url?q=", ""));
+                        }
+                    }
+                    if (i++ > limit)
+                    {
+                        break;
+                    }
+                }
+            }
+            if (links.Count > 0)
+            {
+                supplierURL = links[0];
+            }
+            return supplierURL;
+        }
+
+
         public static string BingSearch(string search)
         {
             string retURL = null;
