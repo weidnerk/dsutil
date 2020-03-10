@@ -548,9 +548,9 @@ namespace dsutil
         }
 
 
-        public static string BingSearch(string search)
+        public static List<string> BingSearch(string search)
         {
-            string retURL = null;
+            var links = new List<string>();
             try
             {
                 IWebDriver driver = new ChromeDriver();
@@ -568,22 +568,27 @@ namespace dsutil
                     var x = item.GetAttribute("href");
                     if (x != null)
                     {
-                        if (x.StartsWith("https://www.walmart.com"))
-                        {
-                            retURL = x;
-                            break;
-                        }
+                        links.Add(x);
                     }
                 }
                 driver.Quit();
             }
             catch (Exception exc)
             {
-                string header = "AnotherTry";
+                string header = "BingSearch";
                 string msg = dsutil.DSUtil.ErrMsg(header, exc);
                 dsutil.DSUtil.WriteFile(_logfile, msg, "");
             }
-            return retURL;
+            return links;
+        }
+        public static bool IsDigitsOnly(string str)
+        {
+            foreach (char c in str)
+            {
+                if (c < '0' || c > '9')
+                    return false;
+            }
+            return true;
         }
     }
 }
