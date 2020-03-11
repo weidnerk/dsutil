@@ -408,6 +408,18 @@ namespace dsutil
                 help.Add("contains WARNING");
                 ret = true;
             }
+            pos = justText.ToUpper().IndexOf("VIRTUAL TOUR");
+            if (pos > -1)
+            {
+                help.Add("contains VIRTUAL TOUR");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("CUSTOMER SERVICE");
+            if (pos > -1)
+            {
+                help.Add("contains CUSTOMER SERVICE");
+                ret = true;
+            }
             pos = justText.ToUpper().IndexOf("?");
             if (pos > -1)
             {
