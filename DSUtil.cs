@@ -449,8 +449,9 @@ namespace dsutil
         /// </summary>
         /// <param name="search"></param>
         /// <returns></returns>
-        public static string GoogleSearchSelenium(string search)
+        public static List<string> GoogleSearchSelenium(string search)
         {
+            var links = new List<string>();
             string retURL = null;
             try
             {
@@ -471,8 +472,7 @@ namespace dsutil
                     {
                         if (x.StartsWith("https://www.walmart.com"))
                         {
-                            retURL = x;
-                            break;
+                            links.Add(x);
                         }
                     }
                 }
@@ -484,7 +484,7 @@ namespace dsutil
                 string msg = dsutil.DSUtil.ErrMsg(header, exc);
                 dsutil.DSUtil.WriteFile(_logfile, msg, "");
             }
-            return retURL;
+            return links; ;
         }
 
         /// <summary>
