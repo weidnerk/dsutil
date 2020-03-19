@@ -32,7 +32,6 @@ namespace dsutil
                 mailMessage.IsBodyHtml = true;
                 mailMessage.Subject = subject;
                 SmtpClient smtpClient = new SmtpClient(host);
-                // smtpClient.Host = host;
                 await smtpClient.SendMailAsync(mailMessage);
             }
             catch (Exception exc)
@@ -55,7 +54,6 @@ namespace dsutil
                 mailMessage.IsBodyHtml = true;
                 mailMessage.Subject = subject;
                 SmtpClient smtpClient = new SmtpClient();
-                // smtpClient.Host = host;
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.PickupDirectoryFromIis;
                 smtpClient.Send(mailMessage);
             }
@@ -106,8 +104,6 @@ namespace dsutil
                 {
                     smtp.Send(message);
                 }
-                // Passing values to smtp object
-                //await smtp.SendMailAsync(fromAddress, toAddress, subject, body);
             }
             catch (Exception exc)
             {
@@ -290,7 +286,7 @@ namespace dsutil
         }
 
         /// <summary>
-        /// Probably should but this in walmart library - they have funny habit of placing question marks in odd places.
+        /// Probably should put this in walmart library - they have funny habit of placing question marks in odd places.
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -529,7 +525,6 @@ namespace dsutil
             var links = new List<string>();
             foreach (HtmlNode link in doc.SelectNodes("//a[@href]"))
             {
-                //HtmlAttribute att = link.Attributes["href"];
                 string hrefValue = link.GetAttributeValue("href", string.Empty);
 
                 // make sure we are inside search results
