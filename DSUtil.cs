@@ -227,7 +227,6 @@ namespace dsutil
             {
                 throw new ArgumentException("days cannot be negative", "days");
             }
-
             if (days == 0) return date;
 
             if (date.DayOfWeek == DayOfWeek.Saturday)
@@ -240,15 +239,12 @@ namespace dsutil
                 date = date.AddDays(1);
                 days -= 1;
             }
-
             date = date.AddDays(days / 5 * 7);
             int extraDays = days % 5;
-
             if ((int)date.DayOfWeek + extraDays > 5)
             {
                 extraDays += 2;
             }
-
             return date.AddDays(extraDays);
         }
         public static int GetBusinessDays(DateTime start, DateTime end)
@@ -261,7 +257,6 @@ namespace dsutil
             {
                 start = start.AddDays(1);
             }
-
             if (end.DayOfWeek == DayOfWeek.Saturday)
             {
                 end = end.AddDays(-1);
@@ -270,11 +265,8 @@ namespace dsutil
             {
                 end = end.AddDays(-2);
             }
-
             int diff = (int)end.Subtract(start).TotalDays;
-
             int result = diff / 7 * 5 + diff % 7;
-
             if (end.DayOfWeek < start.DayOfWeek)
             {
                 return result - 2;
