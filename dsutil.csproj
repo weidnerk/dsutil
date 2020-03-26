@@ -51,6 +51,7 @@
     <Compile Include="DSUtil.cs" />
     <Compile Include="ExtMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scrape.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -5,11 +5,10 @@ using System.Web;
 using System.ComponentModel;
 using System.Xml.Linq;
 
-namespace Utility
+namespace dsutil
 {
     public static class ExtMethods
     {
-
         public static string TryGetElementValue(this XElement parentEl, string elementName, string defaultValue = null)
         {
             try
