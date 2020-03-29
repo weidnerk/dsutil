@@ -589,5 +589,85 @@ namespace dsutil
             }
             return true;
         }
+        /// <summary>
+        /// Look for items most likely want to remove from item description.
+        /// </summary>
+        /// <param name="strCheck"></param>
+        /// <returns></returns>
+        public static List<string> GetDescrWarnings(string description)
+        {
+            var warning = new List<string>();
+            string segment;
+            bool hasOddQuestionMark = dsutil.DSUtil.ContainsQuestionMark(description, out segment);
+            if (hasOddQuestionMark)
+            {
+                warning.Add("Description has odd place question mark -> " + segment);
+            }
+            bool hasKeyWords = dsutil.DSUtil.ContationsKeyWords(description, out List<string> help);
+            if (hasKeyWords)
+            {
+                foreach (var h in help)
+                {
+                    warning.Add("Description " + h);
+                }
+            }
+            bool hasDisclaimer = dsutil.DSUtil.ContationsDisclaimer(description);
+            if (hasDisclaimer)
+            {
+                warning.Add("Description contains Disclaimer");
+            }
+            bool isComputerCamera = IsCameraComputer(description);
+            if (isComputerCamera)
+            {
+                warning.Add("Description computer/camera");
+            }
+            //if (!item.Arrives.HasValue)
+            //{
+            //    warning.Add("Could not calculate arrival date");
+            //}
+            return warning;
+        }
+
+        /// <summary>
+        /// Walmart only offers 14 day returns on computer and cameras, however this does not apply to printers.
+        /// We would prefer to start by searching title but presently don't have title so try description.
+        /// </summary>
+        /// <param name="description"></param>
+        /// <returns></returns>
+        protected static bool IsCameraComputer(string description)
+        {
+            bool ret = false;
+            string computerMarker = "computer";
+            string computerMarker2 = "laptop";
+            string cameraMarker = "camera";
+
+            if (string.IsNullOrEmpty(description))
+            {
+                return false;
+            }
+            int pos = description.ToUpper().IndexOf(computerMarker.ToUpper());
+            if (pos == -1)
+            {
+                pos = description.ToUpper().IndexOf(computerMarker2.ToUpper());
+                if (pos == -1)
+                {
+                    pos = description.ToUpper().IndexOf(cameraMarker.ToUpper());
+                    if (pos > -1)
+                    {
+                        ret = true;
+                    }
+                }
+                else
+                {
+                    ret = true;
+                }
+            }
+            else
+            {
+                ret = true;
+            }
+            return ret;
+        }
+
     }
 }
