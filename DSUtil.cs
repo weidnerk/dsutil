@@ -303,6 +303,7 @@ namespace dsutil
                 {
                     if (pos < justText.Length)
                     {
+                        // BUG here - need to check that (pos + marker.Length <= justText.len)
                         char c = justText[pos + marker.Length];
                         fail = Char.IsLetterOrDigit(c);
                         if (fail)
@@ -598,11 +599,15 @@ namespace dsutil
         {
             var warning = new List<string>();
             string segment;
+
+            // 4.16.2020 not so important for now
+            /*
             bool hasOddQuestionMark = dsutil.DSUtil.ContainsQuestionMark(description, out segment);
             if (hasOddQuestionMark)
             {
                 warning.Add("Description has odd place question mark -> " + segment);
             }
+            */
             bool hasKeyWords = dsutil.DSUtil.ContationsKeyWords(description, out List<string> help);
             if (hasKeyWords)
             {
