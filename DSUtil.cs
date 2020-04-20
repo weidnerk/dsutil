@@ -409,6 +409,18 @@ namespace dsutil
                 help.Add("contains CUSTOMER SERVICE");
                 ret = true;
             }
+            pos = justText.ToUpper().IndexOf("RECALL");
+            if (pos > -1)
+            {
+                help.Add("contains RECALL");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("SEE OUR");
+            if (pos > -1)
+            {
+                help.Add("contains SEE OUR");
+                ret = true;
+            }
             pos = justText.ToUpper().IndexOf("?");
             if (pos > -1)
             {
