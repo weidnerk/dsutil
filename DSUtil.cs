@@ -3,13 +3,16 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace dsutil
 {
@@ -139,9 +142,26 @@ namespace dsutil
         {
             string s = "";
             foreach (string i in array)
+            {
                 s += i + limiter;
+            }
             if (s.Length > 0)
+            {
                 s = s.Substring(0, s.Length - 1);   // remove last semi colon
+            }
+            return s;
+        }
+        public static string ListToDelimited(List<string> list, char limiter)
+        {
+            string s = "";
+            foreach (string i in list)
+            {
+                s += i + limiter;
+            }
+            if (s.Length > 0)
+            {
+                s = s.Substring(0, s.Length - 1);   // remove last semi colon
+            }
             return s;
         }
 
@@ -685,6 +705,30 @@ namespace dsutil
             }
             return ret;
         }
+        /// <summary>
+        /// Get images from supplier from pictureURLS and store them locally at localPath.
+        /// </summary>
+        /// <param name="pictureURLs"></param>
+        /// <param name="localPath"></param>
+        /// <returns></returns>
+        public static List<string> DownloadImages(List<string> pictureURLs, string localPath)
+        {
+            //const string Url = @"http://localhost:51721/productimages/";
+            const string Url = @"http://dscruisecontrol.com/scrapeapi/productimages/";
 
+            var localImages = new List<string>();
+            foreach (var f in pictureURLs)
+            {
+                Uri uri = new Uri(f);
+                string filename = System.IO.Path.GetFileName(uri.LocalPath);
+                localImages.Add(Url + filename);
+                string path = localPath + filename;
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.DownloadFile(f, path);
+                }
+            }
+            return localImages;
+        }
     }
 }

@@ -32,7 +32,7 @@ namespace dsutil
             if (element != null)
                 return element.Value;
 
-            return "";
+            return null;
         }
 
         public static string ElementNameValueNull(this XElement element, string elementName)
