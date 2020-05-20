@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -387,6 +388,12 @@ namespace dsutil
                 help.Add("contains COMMENTS");
                 ret = true;
             }
+            pos = justText.ToUpper().IndexOf("INTERACTIVE TOUR");
+            if (pos > -1)
+            {
+                help.Add("contains INTERACTIVE TOUR");
+                ret = true;
+            }
             pos = justText.ToUpper().IndexOf("QUESTIONS");
             if (pos > -1)
             {
@@ -630,7 +637,6 @@ namespace dsutil
         public static List<string> GetDescrWarnings(string description)
         {
             var warning = new List<string>();
-            string segment;
 
             // 4.16.2020 not so important for now
             /*
@@ -658,10 +664,11 @@ namespace dsutil
             {
                 warning.Add("Description computer/camera");
             }
-            //if (!item.Arrives.HasValue)
-            //{
-            //    warning.Add("Could not calculate arrival date");
-            //}
+            bool containsEmail = dsutil.DSUtil.StringContainsEmail(description);
+            if (containsEmail)
+            {
+                warning.Add("Description contains email address");
+            }
             return warning;
         }
 
@@ -729,6 +736,23 @@ namespace dsutil
                 }
             }
             return localImages;
+        }
+        public static bool StringContainsEmail(string search)
+        {
+            Regex emailRegex = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
+            RegexOptions.IgnoreCase);
+
+            //find items that matches with our pattern
+            MatchCollection emailMatches = emailRegex.Matches(search);
+
+            if (emailMatches.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
