@@ -634,7 +634,7 @@ namespace dsutil
         /// </summary>
         /// <param name="strCheck"></param>
         /// <returns></returns>
-        public static List<string> GetDescrWarnings(string description)
+        public static List<string> GetDescrWarnings(string descriptionHTML)
         {
             var warning = new List<string>();
 
@@ -646,7 +646,7 @@ namespace dsutil
                 warning.Add("Description has odd place question mark -> " + segment);
             }
             */
-            bool hasKeyWords = dsutil.DSUtil.ContationsKeyWords(description, out List<string> help);
+            bool hasKeyWords = dsutil.DSUtil.ContationsKeyWords(descriptionHTML, out List<string> help);
             if (hasKeyWords)
             {
                 foreach (var h in help)
@@ -654,17 +654,17 @@ namespace dsutil
                     warning.Add("Description " + h);
                 }
             }
-            bool hasDisclaimer = dsutil.DSUtil.ContationsDisclaimer(description);
+            bool hasDisclaimer = dsutil.DSUtil.ContationsDisclaimer(descriptionHTML);
             if (hasDisclaimer)
             {
                 warning.Add("Description contains Disclaimer");
             }
-            bool isComputerCamera = IsCameraComputer(description);
+            bool isComputerCamera = IsCameraComputer(descriptionHTML);
             if (isComputerCamera)
             {
                 warning.Add("Description computer/camera");
             }
-            bool containsEmail = dsutil.DSUtil.StringContainsEmail(description);
+            bool containsEmail = dsutil.DSUtil.StringContainsEmail(descriptionHTML);
             if (containsEmail)
             {
                 warning.Add("Description contains email address");
