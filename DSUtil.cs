@@ -471,6 +471,26 @@ namespace dsutil
             }
             return ret;
         }
+        /// <summary>
+        /// Don't need the actual hyperlink - just does the str contain a hyperlink
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool ContainsHyperlink(string str)
+        {
+            const string marker = "<a ";
+            bool ret = false;
+            if (string.IsNullOrEmpty(str))
+            {
+                return false;
+            }
+            int pos = str.ToUpper().IndexOf(marker.ToUpper());
+            if (pos > -1)
+            {
+                ret = true;
+            }
+            return ret;
+        }
 
         /// <summary>
         /// Despite using selenium, google eventually starts asking if you are a robot
@@ -668,6 +688,11 @@ namespace dsutil
             if (containsEmail)
             {
                 warning.Add("Description contains email address");
+            }
+            bool containsHyperlink = dsutil.DSUtil.ContainsHyperlink(descriptionHTML);
+            if (containsHyperlink)
+            {
+                warning.Add("Description contains hyperlink");
             }
             return warning;
         }
