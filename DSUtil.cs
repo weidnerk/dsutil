@@ -740,27 +740,27 @@ namespace dsutil
         /// <summary>
         /// Get images from supplier from pictureURLS and store them locally at localPath.
         /// </summary>
-        /// <param name="pictureURLs"></param>
+        /// <param name="supplierPictureURL"></param>
         /// <param name="localPath"></param>
         /// <returns></returns>
-        public static List<string> DownloadImages(List<string> pictureURLs, string localPath)
+        public static List<string> DownloadImages(List<string> supplierPictureURL, string localPath)
         {
             //const string Url = @"http://localhost:51721/productimages/";
             const string Url = @"http://dscruisecontrol.com/scrapeapi/productimages/";
 
-            var localImages = new List<string>();
-            foreach (var f in pictureURLs)
+            var localImageURL = new List<string>();
+            foreach (var f in supplierPictureURL)
             {
                 Uri uri = new Uri(f);
                 string filename = System.IO.Path.GetFileName(uri.LocalPath);
-                localImages.Add(Url + filename);
+                localImageURL.Add(Url + filename);
                 string path = localPath + filename;
                 using (WebClient webClient = new WebClient())
                 {
                     webClient.DownloadFile(f, path);
                 }
             }
-            return localImages;
+            return localImageURL;
         }
         public static bool StringContainsEmail(string search)
         {
