@@ -491,7 +491,21 @@ namespace dsutil
             }
             return ret;
         }
-
+        public static bool ContainsScript(string str)
+        {
+            const string marker = "<script ";
+            bool ret = false;
+            if (string.IsNullOrEmpty(str))
+            {
+                return false;
+            }
+            int pos = str.ToUpper().IndexOf(marker.ToUpper());
+            if (pos > -1)
+            {
+                ret = true;
+            }
+            return ret;
+        }
         /// <summary>
         /// Despite using selenium, google eventually starts asking if you are a robot
         /// </summary>
@@ -693,6 +707,11 @@ namespace dsutil
             if (containsHyperlink)
             {
                 warning.Add("Description contains hyperlink");
+            }
+            bool containsScript = dsutil.DSUtil.ContainsScript(descriptionHTML);
+            if (containsScript)
+            {
+                warning.Add("Description contains Script");
             }
             return warning;
         }
