@@ -448,6 +448,18 @@ namespace dsutil
                 help.Add("contains SEE OUR");
                 ret = true;
             }
+            pos = justText.ToUpper().IndexOf("SHIPPING");
+            if (pos > -1)
+            {
+                help.Add("contains SHIPPING");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("RETURNS");
+            if (pos > -1)
+            {
+                help.Add("contains RETURNS");
+                ret = true;
+            }
             pos = justText.ToUpper().IndexOf("?");
             if (pos > -1)
             {
