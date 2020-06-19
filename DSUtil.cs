@@ -460,6 +460,12 @@ namespace dsutil
                 help.Add("contains RETURNS");
                 ret = true;
             }
+            pos = justText.ToUpper().IndexOf("ALSO AVAILABLE");
+            if (pos > -1)
+            {
+                help.Add("contains ALSO AVAILABLE");
+                ret = true;
+            }
             pos = justText.ToUpper().IndexOf("?");
             if (pos > -1)
             {
