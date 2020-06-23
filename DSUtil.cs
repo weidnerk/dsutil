@@ -466,6 +466,18 @@ namespace dsutil
                 help.Add("contains ALSO AVAILABLE");
                 ret = true;
             }
+            pos = justText.ToUpper().IndexOf("MULTIPLE SIZES");
+            if (pos > -1)
+            {
+                help.Add("contains MULTIPLE SIZES");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("MULTIPLE COLORS");
+            if (pos > -1)
+            {
+                help.Add("contains MULTIPLE COLORS");
+                ret = true;
+            }
             pos = justText.ToUpper().IndexOf("?");
             if (pos > -1)
             {
