@@ -478,6 +478,20 @@ namespace dsutil
                 help.Add("contains MULTIPLE COLORS");
                 ret = true;
             }
+
+            pos = justText.ToUpper().IndexOf("AVAILABLE COLORS");
+            if (pos > -1)
+            {
+                help.Add("contains AVAILABLE COLORS");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("AVAILABLE SIZES");
+            if (pos > -1)
+            {
+                help.Add("contains AVAILABLE SIZES");
+                ret = true;
+            }
+
             pos = justText.ToUpper().IndexOf("?");
             if (pos > -1)
             {
