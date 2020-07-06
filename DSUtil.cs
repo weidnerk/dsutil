@@ -460,10 +460,10 @@ namespace dsutil
                 help.Add("contains RETURNS");
                 ret = true;
             }
-            pos = justText.ToUpper().IndexOf("ALSO AVAILABLE");
+            pos = justText.ToUpper().IndexOf("AVAILABLE");
             if (pos > -1)
             {
-                help.Add("contains ALSO AVAILABLE");
+                help.Add("contains AVAILABLE");
                 ret = true;
             }
             pos = justText.ToUpper().IndexOf("MULTIPLE SIZES");
@@ -489,6 +489,24 @@ namespace dsutil
             if (pos > -1)
             {
                 help.Add("contains AVAILABLE SIZES");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("SEE MORE");
+            if (pos > -1)
+            {
+                help.Add("contains SEE MORE");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("CHOKING HAZARD");
+            if (pos > -1)
+            {
+                help.Add("contains CHOKING HAZARD");
+                ret = true;
+            }
+            pos = justText.ToUpper().IndexOf("THIS TOY IS NOT SUITABLE");
+            if (pos > -1)
+            {
+                help.Add("contains THIS TOY IS NOT SUITABLE");
                 ret = true;
             }
 
