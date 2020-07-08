@@ -3,17 +3,14 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace dsutil
 {
@@ -725,6 +722,7 @@ namespace dsutil
             }
             return true;
         }
+       
         /// <summary>
         /// Look for items most likely want to remove from item description.
         /// </summary>
