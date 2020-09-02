@@ -87,12 +87,12 @@ namespace dsutil
                 var toAddress = new MailAddress(toEmail, toEmail);
                 // Passing the values and make a email formate to display
                 // smtp settings
-                var smtp = new System.Net.Mail.SmtpClient
+                var smtp = new SmtpClient
                 {
                     Host = "smtp.gmail.com",
                     Port = 587,
                     EnableSsl = true,
-                    DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
                     Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
                     Timeout = 20000
                 };
@@ -827,19 +827,28 @@ namespace dsutil
             //const string Url = @"http://localhost:51721/productimages/";
             const string Url = @"http://dscruisecontrol.com/scrapeapi/productimages/";
 
-            var localImageURL = new List<string>();
-            foreach (var f in supplierPictureURL)
+            try
             {
-                Uri uri = new Uri(f);
-                string filename = System.IO.Path.GetFileName(uri.LocalPath);
-                localImageURL.Add(Url + filename);
-                string path = localPath + filename;
-                using (WebClient webClient = new WebClient())
+                var localImageURL = new List<string>();
+                foreach (var f in supplierPictureURL)
                 {
-                    webClient.DownloadFile(f, path);
+                    Uri uri = new Uri(f);
+                    string filename = System.IO.Path.GetFileName(uri.LocalPath);
+                    localImageURL.Add(Url + filename);
+                    string path = localPath + filename;
+                    using (WebClient webClient = new WebClient())
+                    {
+                        webClient.DownloadFile(f, path);
+                    }
                 }
+                return localImageURL;
             }
-            return localImageURL;
+            catch (Exception exc)
+            {
+                string msg = dsutil.DSUtil.ErrMsg("DownloadImages", exc);
+                WriteFile(_logfile, msg, "noname");
+                throw;
+            }
         }
         public static bool StringContainsEmail(string search)
         {
